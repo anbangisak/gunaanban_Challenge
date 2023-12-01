@@ -21,3 +21,9 @@ To build docker image:
 ./build.sh
 docker run -it -d -p 0.0.0.0:8200:8200 -p 0.0.0.0:8080:8080 challenge:0.0.2
 ```
+
+To deploy docker image in kubernetes:
+```
+cd deploy/bundle
+ansible-playbook -i hosts deploy.yml
+```
