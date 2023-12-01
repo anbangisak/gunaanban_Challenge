@@ -1,1 +1,1 @@
-go build
+docker build -t "challenge:0.0.2" -f ./deploy/docker/Dockerfile . 

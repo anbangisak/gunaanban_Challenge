@@ -18,6 +18,6 @@ curl -v https://localhost:8200/dashboard
 
 To build docker image:
 ```
-cd deploy/docker;
-docker build -t "challenge:0.0.1" .
+./build.sh
+docker run -it -d -p 0.0.0.0:8200:8200 -p 0.0.0.0:8080:8080 challenge:0.0.2 sh
 ```
