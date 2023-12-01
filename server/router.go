@@ -1,19 +1,25 @@
 package server
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/unrolled/secure"
+
+	"github.com/anbangisak/gunaanban_Challenge/config"
 
 	"github.com/anbangisak/gunaanban_Challenge/controllers"
 	"github.com/anbangisak/gunaanban_Challenge/middlewares"
 )
 
 func NewRouter() *gin.Engine {
+	config := config.GetConfig()
+	sslHostName := fmt.Sprintf("localhost:%v", config.GetString("server.https_port"))
 	secureFunc := func() gin.HandlerFunc {
 		return func(c *gin.Context) {
 			secureMiddleware := secure.New(secure.Options{
 				SSLRedirect: true,
-				SSLHost:     "localhost:8888",
+				SSLHost:     sslHostName,
 			})
 			err := secureMiddleware.Process(c.Writer, c.Request)
 
@@ -32,6 +38,9 @@ func NewRouter() *gin.Engine {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 	router.LoadHTMLGlob("./templates/*")
+	router.GET("/", func(c *gin.Context) {
+		c.String(200, "X-Frame-Options header is now `DENY`.")
+	})
 
 	dashboard := new(controllers.DashboardController)
 
