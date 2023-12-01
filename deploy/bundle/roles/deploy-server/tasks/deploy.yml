@@ -1,0 +1,71 @@
+---
+
+# - name: check the status of minikube.
+#   command: minikube status
+#   register: minikube_status
+#   changed_when: false
+#   ignore_errors: true
+
+# - name: start minikube if it's not running.
+#   command: minikube start --vm = true
+#   when: "not minikube_status.stdout or 'Running' not in minikube_status.stdout"
+
+# - name: get existing image hash.
+#   shell: |
+#     eval $(minikube docker-env)
+#     docker images -q {{ image_name }}
+#   register: image_hash
+#   changed_when: false
+
+- name: create a deployment for simple server.
+  k8s:
+    state: present
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: simple-server
+        namespace: default
+      spec:
+        replicas: "{{ replicas }}"
+        selector:
+          matchLabels:
+            app: simple-server
+        template:
+          metadata:
+            labels:
+              app: simple-server
+          spec:
+            containers:
+            - name: simple-server
+              image: "{{ image_name }}:{{ image_tag }}"
+              imagePullPolicy: IfNotPresent
+              ports:
+                - name: http
+                  containerPort: 8080
+                - name: https
+                  containerPort: 8888
+
+- name: create a Service for simple server.
+  k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: simple-server
+        namespace: default
+      spec:
+        type: LoadBalancer
+        ports:
+        - name: http
+          protocol: TCP
+          port: 8080
+          targetPort: 8080
+        - name: https
+          protocol: TCP
+          port: 8888
+          targetPort: 8888
+        selector:
+          app: simple-server
+

@@ -1,0 +1,4 @@
+---
+# tasks file for deploy-server
+
+- include_tasks: deploy.yml
