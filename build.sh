@@ -1,2 +1,1 @@
-ls -lrth
 go build
