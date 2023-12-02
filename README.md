@@ -27,3 +27,16 @@ To deploy docker image in kubernetes:
 cd deploy/bundle
 ansible-playbook -i hosts deploy.yml
 ```
+
+To run json transformer:
+```
+cd challenge2
+go run .\jsonTransformer.go
+```
+
+To run HackerRank credit card number validation:
+```
+cd additional_challenge
+go run .\regexHackerRank.go
+python .\regexHackerRank.py
+```
